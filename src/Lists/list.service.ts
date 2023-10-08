@@ -1,14 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
-import { CreateBoardDTO } from './dto/createBoard.dto';
+import { CreateListDTO } from './dto/createList.dto';
 
 @Injectable()
-export class BoardService {
-  getBoardTest(): string {
-    return 'Board!';
-  }
-
-  async getBoard() {
+export class ListService {
+  async getList() {
     return axios
       .get(
         `${process.env.API_TRELLO_URL}/members/me/boards?fields=name,url&key=${process.env.KEY}&token=${process.env.TOKEN}`,
@@ -20,10 +16,13 @@ export class BoardService {
         console.error('Erro:', error);
       });
   }
-  async createBoard(data: CreateBoardDTO) {
+  async createList(data: CreateListDTO) {
     return axios
       .post(
-        `${process.env.API_TRELLO_URL}/boards?name=${data.name}&key=${process.env.KEY}&token=${process.env.TOKEN}`,
+        `${process.env.API_TRELLO_URL}/lists?name=${data.name}&idBoard=${data.idBoard}&key=${process.env.KEY}&token=${process.env.TOKEN}`,
+        {
+          defaultLists: false,
+        },
       )
 
       .then((response) => {
