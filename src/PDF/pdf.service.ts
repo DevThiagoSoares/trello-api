@@ -14,10 +14,9 @@ export class PDFService {
           data,
         );
 
-        // Opções para a conversão HTML para PDF
         const options: pdf.CreateOptions = {
-          format: 'Letter', // ou outro formato de página desejado
-          orientation: 'portrait', // ou 'landscape' para paisagem
+          format: 'Letter',
+          orientation: 'portrait',
         };
 
         // Converta o HTML para PDF
@@ -25,13 +24,13 @@ export class PDFService {
           .create(ejsTemplate, options)
           .toFile('./uploads/pedido.pdf', (err, res) => {
             if (err) {
-              reject(err); // Rejeita a Promise em caso de erro
+              reject(err);
             } else {
-              resolve(res.filename); // Resolve a Promise com o nome do arquivo PDF
+              resolve(res.filename);
             }
           });
       } catch (error) {
-        reject(error); // Rejeita a Promise em caso de erro
+        reject(error);
       }
     });
   }

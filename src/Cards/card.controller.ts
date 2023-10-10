@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { CardService } from './card.service';
-import { CreateCardDTO } from './dto/createCard.dto';
+import { Payload, UpdateCardDTO } from './dto/createCard.dto';
 
 @Controller('api/card')
 export class CardController {
@@ -11,13 +11,13 @@ export class CardController {
     return this.cardService.getCard();
   }
 
-  @Post()
-  createCard(@Body() data: CreateCardDTO) {
-    return this.cardService.createCard(data);
+  @Post('list/:idList')
+  createCard(@Param('idList') idList: string, @Body() data: Payload) {
+    return this.cardService.createCard(idList, data);
   }
 
   @Put(':cardId')
-  updateCard(@Param('cardId') cardId: string, @Body() data: CreateCardDTO) {
+  updateCard(@Param('cardId') cardId: string, @Body() data: UpdateCardDTO) {
     return this.cardService.updateCard(cardId, data);
   }
 }

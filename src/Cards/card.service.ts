@@ -1,7 +1,8 @@
+/* eslint-disable prettier/prettier */
 import { Inject, Injectable } from '@nestjs/common';
 import axios from 'axios';
 import * as fs from 'fs';
-import { CreateCardDTO, UpdateCardDTO } from './dto/createCard.dto';
+import { Payload, UpdateCardDTO } from './dto/createCard.dto';
 import { PDFService } from './../PDF/pdf.service';
 import { generatePdfDTO } from 'src/PDF/dto/pdf.dto';
 import FormData from 'form-data';
@@ -10,12 +11,12 @@ import FormData from 'form-data';
 export class CardService {
   constructor(
     @Inject(PDFService)
-    private readonly PdfService: PDFService,
+    private readonly PdfService: PDFService
   ) {}
   async getCard() {
     return axios
       .get(
-        `${process.env.API_TRELLO_URL}/members/me/boards?fields=name,url&key=${process.env.KEY}&token=${process.env.TOKEN}`,
+        `${process.env.API_TRELLO_URL}/members/me/boards?fields=name,url&key=${process.env.KEY}&token=${process.env.TOKEN}`
       )
       .then((response) => {
         return response.data;
@@ -25,24 +26,26 @@ export class CardService {
       });
   }
 
-  async createCard(data: CreateCardDTO) {
+  async createCard(idList: string, data: Payload) {
     const dataPdf: generatePdfDTO = {
-      gerente: data.name,
-      itens: [data.desc],
-      title: data.name,
+      gerente: data.projectManager,
+      itens: data.materialList,
+      title: 'data'
     };
 
     try {
       // Gera o PDF e aguarda sua conclusão
       await this.PdfService.generatePdf(dataPdf);
+      const description = this.generateDescription(data);
 
       // Continua com a criação do cartão
-      const response = await axios.post(
-        `${process.env.API_TRELLO_URL}/cards?name=${data.name}&desc=${data.desc}&idList=${data.idList}&key=${process.env.KEY}&token=${process.env.TOKEN}`,
-        {
-          defaultCards: false,
-        },
-      );
+      const response = await axios.post(`${process.env.API_TRELLO_URL}/cards`, {
+        name: 'Colocar um Nome',
+        desc: description,
+        idList: idList,
+        key: process.env.KEY,
+        token: process.env.TOKEN
+      });
 
       const cardDetails = {
         id: response.data.id,
@@ -53,13 +56,13 @@ export class CardService {
         idChecklists: response.data.idChecklists,
         idList: response.data.idList,
         url: response.data.url,
-        desc: response.data.desc,
+        desc: response.data.desc
       };
 
       // Cria anexos após a criação do cartão
       await this.createAttachmentsCard(cardDetails.id, {
         name: cardDetails.name,
-        file: 'uploads/pedido.pdf',
+        file: 'uploads/pedido.pdf'
       });
 
       return cardDetails;
@@ -82,9 +85,9 @@ export class CardService {
         form,
         {
           headers: {
-            ...form.getHeaders(),
-          },
-        },
+            ...form.getHeaders()
+          }
+        }
       );
 
       const cardDetails = {
@@ -94,7 +97,7 @@ export class CardService {
         isUpload: response.data.isUpload,
         fileName: response.data.fileName,
         limits: response.data.limits,
-        date: response.data.date,
+        date: response.data.date
       };
       return cardDetails;
     } catch (error) {
@@ -107,8 +110,8 @@ export class CardService {
       .put(
         `${process.env.API_TRELLO_URL}/cards/${cardId}?name=${data.name}&desc=${data.desc}&key=${process.env.KEY}&token=${process.env.TOKEN}`,
         {
-          defaultCards: false,
-        },
+          defaultCards: false
+        }
       )
 
       .then((response) => {
@@ -121,12 +124,48 @@ export class CardService {
           idChecklists: response.data.idChecklists,
           idList: response.data.idList,
           url: response.data.url,
-          desc: response.data.desc,
+          desc: response.data.desc
         };
         return cardDetails;
       })
       .catch((error) => {
         return error;
       });
+  }
+
+  generateDescription(payload: Payload): string {
+    const projectInfo = `
+    \n**Nome do solicitante:** ${payload.project.requester}\n
+    \n**Projeto:** ${payload.project.projectName}
+    \n**Centro de Custos:** ${payload.project.coastCenter}
+    \n**Filial:** ${payload.project.subsidiary}
+    \n**Prioridade:** ${payload.project.priority}
+    \n 
+    \n_______________________________________________
+    \n**Justificativa:** ${payload.justification}
+    \n_______________________________________________
+    \n 
+    `;
+
+    const materialListInfo = payload.materialList.map(
+      (material, index) => `
+    \n  - **Material ${index + 1}:**
+    \n    - Quantidade: ${material.quantity} ${
+      material.Und
+    }\n    - Descrição: ${material.description}\n    - Valor Unitário: ${
+      material.unitaryValue
+    }\n    - Link de Compra: ${material.purchaseLink}
+    `
+    );
+
+    const personInfo = `
+    \n_______________________________________________
+    \n\n**Lider do Projeto:** ${payload.projectLeader}\n
+    \n**Gerente do projeto:** ${payload.projectManager}
+    \n**Gerente Técnico:** ${payload.technicalNanager}
+    \n**Email Solicitante:** ${payload.email}
+    \n\n`;
+
+    return `${projectInfo}\n\n\n${materialListInfo.join('')}\n\n${personInfo}`;
   }
 }
