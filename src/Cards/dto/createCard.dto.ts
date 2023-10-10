@@ -32,6 +32,7 @@ export interface Material {
 }
 
 export interface Payload {
+  imagePath: string;
   projectLeader: string;
   projectManager: string;
   technicalNanager: string;

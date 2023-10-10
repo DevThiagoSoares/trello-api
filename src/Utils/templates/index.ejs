@@ -4,20 +4,129 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        font-size: 12px; /* Tamanho da fonte */
+      }
+
+      h1 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      h2 {
+        font-size: 20px;
+        color: #333;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+
+      th,
+      td {
+        border: 1px solid #000;
+        padding: 8px;
+        text-align: left;
+      }
+
+      th {
+        font-weight: bold;
+      }
+
+      a {
+        text-decoration: none;
+        color: #007bff;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+    </style>
     <title>Pedido de Compra</title>
   </head>
   <body>
-    <h1>Pedido de Compra</h1>
+    <h1>Pedido de Compra - Grupo ICTS</h1>
 
-    <h2>Pedido: <%= title %></h2>
+    <!-- Tabela para "Informações do Projeto" -->
+    <table>
+      <tr>
+        <th>Informações do Projeto</th>
+        <th></th>
+      </tr>
+      <tr>
+        <td><strong>Nome do solicitante:</strong></td>
+        <td><%= project.requester %></td>
+      </tr>
+      <tr>
+        <td><strong>Projeto:</strong></td>
+        <td><%= project.projectName %></td>
+      </tr>
+      <tr>
+        <td><strong>Centro de Custos:</strong></td>
+        <td><%= project.coastCenter %></td>
+      </tr>
+      <tr>
+        <td><strong>Filial:</strong></td>
+        <td><%= project.subsidiary %></td>
+      </tr>
+      <tr>
+        <td><strong>Prioridade:</strong></td>
+        <td><%= project.priority %></td>
+      </tr>
+    </table>
 
-    <h3>Itens do Pedido:</h3>
-    <ul>
-      <% for (let i = 0; i < itens.length; i++) { %>
-      <li><%= itens[i] %></li>
-      <% } %>
-    </ul>
+    <!-- Tabela para "Materiais" -->
+    <table>
+      <tr>
+        <th>Descrição do Material</th>
+        <th>Quantidade</th>
+        <th>Valor Unitário</th>
+        <th>Link de Compra</th>
+      </tr>
+      <% materialList.forEach(function(material, index) { %>
+      <tr>
+        <td><%= material.description %></td>
+        <td><%= material.quantity %> <%= material.Und %></td>
+        <td><%= material.unitaryValue %></td>
+        <td>
+          <a href="<%= material.purchaseLink %>"
+            ><%= material.purchaseLink %></a
+          >
+        </td>
+      </tr>
+      <% }); %>
+    </table>
 
-    <p>Gerente: <%= gerente %></p>
+    <!-- Tabela para "Informações da Pessoa" -->
+    <table>
+      <tr>
+        <th>Informações do Equipe</th>
+        <th></th>
+      </tr>
+      <tr>
+        <td><strong>Gerente do projeto:</strong></td>
+        <td><%= projectManager %></td>
+      </tr>
+      <tr>
+        <td><strong>Lider do Projeto:</strong></td>
+        <td><%= projectLeader %></td>
+      </tr>
+      <tr>
+        <td><strong>Gerente Técnico:</strong></td>
+        <td><%= technicalManager %></td>
+      </tr>
+      <tr>
+        <td><strong>Email Solicitante:</strong></td>
+        <td><%= email %></td>
+      </tr>
+    </table>
   </body>
 </html>

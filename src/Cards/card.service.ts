@@ -4,7 +4,6 @@ import axios from 'axios';
 import * as fs from 'fs';
 import { Payload, UpdateCardDTO } from './dto/createCard.dto';
 import { PDFService } from './../PDF/pdf.service';
-import { generatePdfDTO } from 'src/PDF/dto/pdf.dto';
 import FormData from 'form-data';
 
 @Injectable()
@@ -27,15 +26,9 @@ export class CardService {
   }
 
   async createCard(idList: string, data: Payload) {
-    const dataPdf: generatePdfDTO = {
-      gerente: data.projectManager,
-      itens: data.materialList,
-      title: 'data'
-    };
-
     try {
       // Gera o PDF e aguarda sua conclusão
-      await this.PdfService.generatePdf(dataPdf);
+      await this.PdfService.generatePdf(data);
       const description = this.generateDescription(data);
 
       // Continua com a criação do cartão
