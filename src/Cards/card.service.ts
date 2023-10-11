@@ -25,7 +25,7 @@ export class CardService {
       });
   }
 
-  async createCard(idList: string, data: Payload) {
+  async createCard(data: Payload) {
     try {
       // Gera o PDF e aguarda sua conclusão
       await this.PdfService.generatePdf(data);
@@ -33,9 +33,9 @@ export class CardService {
 
       // Continua com a criação do cartão
       const response = await axios.post(`${process.env.API_TRELLO_URL}/cards`, {
-        name: 'Colocar um Nome',
+        name: 'Pedido de Compra',
         desc: description,
-        idList: idList,
+        idList: process.env.ID_LIST,
         key: process.env.KEY,
         token: process.env.TOKEN
       });
@@ -130,7 +130,7 @@ export class CardService {
     const projectInfo = `
     \n**Nome do solicitante:** ${payload.project.requester}\n
     \n**Projeto:** ${payload.project.projectName}
-    \n**Centro de Custos:** ${payload.project.coastCenter}
+    \n**Centro de Custos:** ${payload.project.costCenter}
     \n**Filial:** ${payload.project.subsidiary}
     \n**Prioridade:** ${payload.project.priority}
     \n 
@@ -144,7 +144,7 @@ export class CardService {
       (material, index) => `
     \n  - **Material ${index + 1}:**
     \n    - Quantidade: ${material.quantity} ${
-      material.Und
+      material.und
     }\n    - Descrição: ${material.description}\n    - Valor Unitário: ${
       material.unitaryValue
     }\n    - Link de Compra: ${material.purchaseLink}
@@ -155,7 +155,7 @@ export class CardService {
     \n_______________________________________________
     \n\n**Lider do Projeto:** ${payload.projectLeader}\n
     \n**Gerente do projeto:** ${payload.projectManager}
-    \n**Gerente Técnico:** ${payload.technicalNanager}
+    \n**Gerente Técnico:** ${payload.technicalManager}
     \n**Email Solicitante:** ${payload.email}
     \n\n`;
 

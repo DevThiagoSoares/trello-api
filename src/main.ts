@@ -11,13 +11,13 @@ async function bootstrap() {
 
   app.useGlobalPipes(
     new ValidationPipe({
-      forbidUnknownValues: false,
-    }),
+      forbidUnknownValues: false
+    })
   );
 
   app.enableCors({
     allowedHeaders: '*',
-    origin: '*',
+    origin: '*'
   });
 
   await app.listen(env.BACKEND_PORT, () => {

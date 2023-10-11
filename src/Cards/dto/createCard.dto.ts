@@ -18,14 +18,14 @@ export interface UpdateCardDTO {
 interface Project {
   requester: string;
   projectName: string;
-  coastCenter: string;
+  costCenter: string;
   subsidiary: string;
   priority: string;
 }
 
 export interface Material {
   quantity: number;
-  Und: string;
+  und: string;
   description: string;
   unitaryValue: number;
   purchaseLink: string;
@@ -35,7 +35,7 @@ export interface Payload {
   imagePath: string;
   projectLeader: string;
   projectManager: string;
-  technicalNanager: string;
+  technicalManager: string;
   email: string;
   justification: string;
   project: Project;

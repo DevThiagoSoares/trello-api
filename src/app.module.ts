@@ -6,6 +6,6 @@ import { ChecklistModule } from './Checklits/checklist.module';
 import { PDFModule } from './PDF/pdf.module';
 
 @Module({
-  imports: [PDFModule, BoardModule, ListModule, CardModule, ChecklistModule],
+  imports: [PDFModule, BoardModule, ListModule, CardModule, ChecklistModule]
 })
 export class AppModule {}

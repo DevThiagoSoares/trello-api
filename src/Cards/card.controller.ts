@@ -11,9 +11,9 @@ export class CardController {
     return this.cardService.getCard();
   }
 
-  @Post('list/:idList')
-  createCard(@Param('idList') idList: string, @Body() data: Payload) {
-    return this.cardService.createCard(idList, data);
+  @Post('list/')
+  createCard(@Body() data: Payload) {
+    return this.cardService.createCard(data);
   }
 
   @Put(':cardId')
