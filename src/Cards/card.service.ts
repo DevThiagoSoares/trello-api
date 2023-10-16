@@ -33,7 +33,7 @@ export class CardService {
 
       // Continua com a criação do cartão
       const response = await axios.post(`${process.env.API_TRELLO_URL}/cards`, {
-        name: 'Pedido de Compra',
+        name: `Pedido de Compra - ${data.project.requester} [${data.project.projectName}]`,
         desc: description,
         idList: process.env.ID_LIST,
         key: process.env.KEY,
