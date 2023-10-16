@@ -118,7 +118,7 @@
     <!-- Tabela para "Materiais" -->
     <table>
       <tr>
-        <th class="title">Descrição do Material</th>
+        <th class="title">Descrição</th>
         <th class="title">Quantidade</th>
         <th class="title">Valor Unitário</th>
         <th class="title">Link de Compra</th>
@@ -132,7 +132,7 @@
           <%= material.unitaryValue.toLocaleString('pt-BR', { style: 'currency',
           currency: 'BRL' }) %>
         </td>
-        <td>
+        <td style="max-width: 250px; word-wrap: break-word">
           <a href="<%= material.purchaseLink %>"
             ><%= material.purchaseLink %></a
           >
